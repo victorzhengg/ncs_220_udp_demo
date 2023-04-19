@@ -20,7 +20,7 @@ K_SEM_DEFINE(lte_connected, 0, 1);
 static void server_transmission_work_fn(struct k_work *work)
 {
 	int err;
-	char buffer[CONFIG_UDP_DATA_UPLOAD_SIZE_BYTES] = {"\0"};
+	char buffer[CONFIG_UDP_DATA_UPLOAD_SIZE_BYTES] = {"hello\r\n"};
 
 	printk("Transmitting UDP/IP payload of %d bytes to the ",
 	       CONFIG_UDP_DATA_UPLOAD_SIZE_BYTES + UDP_IP_HEADER_SIZE);
