@@ -1,0 +1,2 @@
+AT+CGSN=1  #读 IMEI
+AT+CIMI    #读 IMSI

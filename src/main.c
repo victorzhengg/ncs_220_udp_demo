@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <modem/lte_lc.h>
 #include <zephyr/net/socket.h>
+#include <dk_buttons_and_leds.h>
 
 #define UDP_IP_HEADER_SIZE 28
 
@@ -143,6 +144,8 @@ static void modem_init(void)
 			return;
 		}
 	}
+
+
 }
 
 static void modem_connect(void)
@@ -206,11 +209,30 @@ error:
 	return err;
 }
 
+uint8_t at_buf[256];
+
+static void button_handler(uint32_t button_states, uint32_t has_changed)
+{
+
+	if (has_changed & button_states & DK_BTN1_MSK) {
+		nrf_modem_at_cmd(at_buf, sizeof(at_buf), "AT+CGMR");
+		printk("Current modem firmware version: %s\n", at_buf);
+
+		nrf_modem_at_cmd(at_buf, sizeof(at_buf), "AT+CGSN=1");
+		printk("IMEI: %s\n", at_buf);
+
+		nrf_modem_at_cmd(at_buf, sizeof(at_buf), "AT+CIMI");
+		printk("IMSI: %s\n", at_buf);	
+	}
+}
+
 void main(void)
 {
 	int err;
 
 	printk("UDP sample has started\n");
+
+	dk_buttons_init(button_handler);
 
 	work_init();
 
